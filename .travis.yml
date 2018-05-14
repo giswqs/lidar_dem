@@ -4,6 +4,10 @@ python:
 - 3.5
 - 3.4
 - 2.7
+before_install:
+  - sudo apt-get install libgdal-dev
+  - export CPLUS_INCLUDE_PATH=/usr/include/gdal
+  - export CPLUS_INCLUDE_PATH=/usr/include/gdal
 install: pip install -U tox-travis
 script: tox
 deploy:
