@@ -5,10 +5,10 @@ python:
 - 3.4
 - 2.7
 before_install:
-  - sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+  - sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable -y
   - sudo apt-get update
-  - sudo apt-get install gdal-bin
-  - sudo apt-get install libgdal-dev
+  - sudo apt-get install gdal-bin -y
+  - sudo apt-get install libgdal-dev -y
   - export CPLUS_INCLUDE_PATH=/usr/include/gdal
   - export CPLUS_INCLUDE_PATH=/usr/include/gdal
 install: pip install -U tox-travis
