@@ -6,11 +6,10 @@ import time
 from scipy import ndimage
 from skimage import measure
 from osgeo import gdal, ogr, osr
-
 import matplotlib.pyplot as plt
 
 
-## class for true depression
+# class for true depression
 class Depression:
     def __init__(self, id, count, size, volume, meanDepth, maxDepth, minElev, bndElev):
         self.id = id
@@ -84,7 +83,6 @@ def write_dep_csv(dep_list, csv_file):
         line = "{},{},{},{:.2f},{:.2f},{:.2f},{:.2f},{:.2f}".format(dep.id, dep.count, dep.size, dep.volume,
                                                                 dep.meanDepth, dep.maxDepth, dep.minElev, dep.bndElev)
         # print(line)
-
         csv.write(line + "\n")
     csv.close()
 
@@ -129,20 +127,8 @@ def polygonize(img,shp_path):
     del img, ds, srcband, dst_ds, dst_layer
 
 
-if __name__ == '__main__':
-
-    # ************************ change the following parameters if needed ******************************** #
-    # set input files
-    in_dem = "/media/hdd/Data/EPA/North_Dakota/data/LiDAR/lidar_3m.tif"
-    in_dem = "/media/hdd/Data/EPA/wabash/dem_10m/dem_10m.tif"
-    in_dem = "../data/CLSA_LiDAR.tif"
-    # parameters for depression filling
-    min_size = 1000        # minimum number of pixels as a depression
-    min_depth = 0.3         # minimum depression depth
-    # set output directory
-    # out_dir = "../result"
-    out_dir = "/media/hdd/temp/filling/"
-    # ************************************************************************************************** #
+# extract sinks from dem
+def ExtractSinks(in_dem, min_size, out_dir):
 
     start_time = time.time()
 
@@ -207,7 +193,7 @@ if __name__ == '__main__':
     sink[region == 0] = 0
     sink = np2rdarray(sink, no_data=0, projection=projection, geotransform=geotransform)
     rd.SaveGDAL(out_sink, sink)
-    del sink
+    # del sink
 
     print("Saving refined dem ...")
     dem_refined = dem_filled
@@ -228,3 +214,23 @@ if __name__ == '__main__':
 
     end_time = time.time()
     print("Total run time:\t\t\t {:.4f} s".format(end_time - start_time))
+
+    return sink
+
+
+if __name__ == '__main__':
+
+    # ************************ change the following parameters if needed ******************************** #
+    # set input files
+    in_dem = "../data/dem.tif"
+    # parameters for depression filling
+    min_size = 1000        # minimum number of pixels as a depression
+    min_depth = 0.3         # minimum depression depth
+    # set output directory
+    out_dir = "/home/qiusheng/temp"
+    # ************************************************************************************************** #
+
+    sink = ExtractSinks(in_dem, min_size=min_size, out_dir=out_dir)
+    dem = rd.LoadGDAL(in_dem)
+    demfig = rd.rdShow(dem, ignore_colours=[0], axes=False, cmap='jet', figsize=(6, 5.5))
+    sinkfig = rd.rdShow(sink, ignore_colours=[0], axes=False, cmap='jet', figsize=(6, 5.5))
