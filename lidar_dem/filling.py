@@ -3,7 +3,6 @@ import numpy as np
 import math
 import os
 import time
-import shapefile, csv
 from scipy import ndimage
 from skimage import measure
 from osgeo import gdal, ogr, osr
