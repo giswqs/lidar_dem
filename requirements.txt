@@ -4,4 +4,4 @@ matplotlib
 scipy
 scikit-image
 pygdal
-richdem==
+richdem
